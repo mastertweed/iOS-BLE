@@ -7,10 +7,85 @@
 //
 
 import SwiftUI
+import CoreBluetooth
+
+var centralManager: CBCentralManager!
 
 struct ContentView: View {
+    @State var heartRate = 60
+    @State var ledColor = Color.red
+    
+    @ObservedObject var bleManager = BLEManager()
+    
     var body: some View {
-        Text("Hello, World!")
+        
+        VStack() {
+            Text("iOS-BLE")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.all)
+            
+            HStack() {
+                
+                Button(action: {
+                    print("Button Pressed!")
+                    self.heartRate += 1
+                    self.ledColor = Color.green
+                }) {
+                    Text("Connect Sensor")
+                        .foregroundColor(Color.white)
+                    .padding(.all)
+                }
+                .background(Color.blue)
+                .cornerRadius(20)
+                                
+                Text("Disconnected")
+                    .font(.headline)
+                    .padding(.leading)
+                
+                Circle()
+                    .frame(width: 30.0, height: 30.0)
+                    .padding(.all)
+                    .foregroundColor(self.ledColor)
+            }
+            .padding(.bottom)
+            
+            
+            // Status goes here
+            if bleManager.isSwitchedOn {
+                Text("Bluetooth is switched on")
+                    .foregroundColor(.green)
+            }
+            else {
+                Text("Bluetooth is NOT switched on")
+                    .foregroundColor(.red)
+            }
+                
+            Spacer()
+            
+            Text(String(self.heartRate))
+                .font(.system(size: 120.0))
+            
+            Spacer()
+            
+            HStack() {
+                Button(action: {
+                    print("Button Pressed!")
+                    self.heartRate -= 1
+                }) {
+                    Text("Send Data")
+                        .foregroundColor(Color.white)
+                        .padding(.horizontal, 60)
+                        .padding(.vertical)
+                    
+                }
+                .background(Color.blue)
+                .cornerRadius(20)
+                
+            }
+        }
+        
+        
     }
 }
 
@@ -19,3 +94,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
